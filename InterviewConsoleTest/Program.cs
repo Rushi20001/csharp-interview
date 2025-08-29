@@ -15,11 +15,10 @@ class Program
         var consoleLogger = new ConsoleLoggerClass();
 
         
-        var innerCompositeLogger = new CompositeLoggerClass(new List<ILogger> { consoleLogger });
+        
+        var compositeLogger = new CompositeLoggerClass(new List<ILogger> { fileLogger, consoleLogger });
 
-        var topCompositeLogger = new CompositeLoggerClass(new List<ILogger> { fileLogger, innerCompositeLogger });
-
-        LogResult result = await topCompositeLogger.LogAsync("log message.");
+        LogResult result = await compositeLogger.LogAsync("log message.");
 
         if (result.Success)
         {
