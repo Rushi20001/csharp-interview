@@ -9,15 +9,26 @@ class Program
     {
         Console.WriteLine("Starting application...");
 
-        //Implement three classes, all must implement ILogger interface:
-        //1. a FileLogger, which logs a message to a file
-        //2. a ConsoleLogger, which logs a message to the consoler
-        //3. a CompositeLogger, which accepts a number of ILogger and uses all of them
+        var fileLogger = new FileLoggerClass("log.txt");
 
-        //Instantiate a CompositeLogger, which will use a FileLogger and a CompositeLogger
+        
+        var consoleLogger = new ConsoleLoggerClass();
 
-        //LogResult for CompositeLogger is Successful if ALL loggers are successful. ErrorMessage is the concatenation of each ErrorMessage of each logger (if any)
+        
+        var innerCompositeLogger = new CompositeLoggerClass(new List<ILogger> { consoleLogger });
 
+        var topCompositeLogger = new CompositeLoggerClass(new List<ILogger> { fileLogger, innerCompositeLogger });
+
+        LogResult result = await topCompositeLogger.LogAsync("log message.");
+
+        if (result.Success)
+        {
+            Console.WriteLine("Logging succeeded.");
+        }
+        else
+        {
+            Console.WriteLine("Logging failed: " + result.ErrorMessage);
+        }
         Console.WriteLine("Application finished.");
     }
 }
